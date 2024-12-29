@@ -1,0 +1,19 @@
+{% extends "chat/base.html" %}
+
+{% block content %}
+    <form hx-post="{% url 'chat:reply' %}"
+          hx-ext="streaming-html"
+          hx-target="#chat-messages"
+          hx-swap="beforeend"
+          hx-on:chunk="if(event.detail.count === 0) this.reset();">
+        {% csrf_token %}
+        <input type="text" name="content"/>
+        <input type="submit" value="전송"/>
+    </form>
+
+    <div id="chat-messages">
+        {% for message in chat_messages %}
+            {% include "chat/_chat_message.html" with message=message %}
+        {% endfor %}
+    </div>
+{% endblock %}
